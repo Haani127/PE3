@@ -50,3 +50,27 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#----------------------------ML MODULES: data_scale FUNCTION----------------------------
+
+import numpy as np
+from sklearn.metrics import confusion_matrix
+
+def iqr_winsorize(df, cols, threshold=1.5):
+    for col in cols:
+        q1 = df[col].quantile(0.25)
+        q3 = df[col].quantile(0.75)
+        iqr = q3 - q1
+        lower = q1 - threshold * iqr
+        upper = q3 + threshold * iqr
+        df[col] = np.where(df[col] < lower, lower, df[col])
+        df[col] = np.where(df[col] > upper, upper, df[col])
+    return df
+
+
+def print_confusion(y_true, y_pred):
+    print("Confusion Matrix")
+    print(confusion_matrix(y_true, y_pred))
+    print("===================")
+    print()
